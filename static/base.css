@@ -1,0 +1,34 @@
+.header-row {
+
+}
+
+.search-cell {
+    display: flex;
+    align-items: center;
+}
+
+.user-cell {
+    display: flex;
+    align-items: flex-end;
+}
+
+.nav-row, .nav-row a {
+    background: #1375cf;
+    color: whitesmoke;
+}
+
+.nav-row a:hover {
+    color: whitesmoke;
+    text-decoration: underline;
+}
+
+.footer-row, .footer-row a {
+    background-color: #1375cf;
+    color: whitesmoke;
+}
+
+.footer-row a:link, .footer-row a:visited {
+    text-decoration: none;
+}
+
+

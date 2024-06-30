@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{{ url_for('static', filename='bootstrap-5.3.3-dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap-icons-1.11.3/font/bootstrap-icons.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='base.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}" async></script>
+    <title>{%  block title %}Web App Starter{% endblock %}</title>
+    {% block header %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <div class="row header-row">
+            <div class="col-9">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='generic-company-logo.png') }}" height="100" alt="Company Logo">
+                </a>
+            </div>
+            <div class="col-2 search-cell">
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="I want to..." aria-label="Search">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i id="search-button" class="bi-search" style="font-size: 1rem; color: #1375cf;"></i>
+                </button>
+                </form>
+            </div>
+            <div class="col-1 user-cell">
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i id="user-button" class="bi-person-circle" style="font-size: 2rem; color: #1375cf;"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% if session.user %}
+                            <li><a class="dropdown-item" href="#">Account</a></li>
+                            <li><a class="dropdown-item" href="#">Other Stuff</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <nav class="nav nav-fill nav-row">
+                <a class="nav-link" href="#">Option One</a>
+                <a class="nav-link" href="#">Option Two</a>
+                <a class="nav-link" href="#">Option Three</a>
+                <a class="nav-link" href="#">Option Four</a>
+            </nav>
+        </div>
+        <div class="row content-row">
+            {% block content %}{% endblock %}
+        </div>
+        <div class="row footer-row">
+            <div class="col-4">
+                <img src="{{ url_for('static', filename='generic-company-logo-white.png') }}" height="60" alt="Company Logo">
+            </div>
+        </div>
+        <div class="row footer-row">
+            <div class="col-4">
+                <p>
+                    123 Somewhere St<br>
+                    Some City, XX 12345
+                </p>
+                <p>
+                    <a href="tel:1234567890">(123) 456-7890</a><br>
+                    <a href="mailto:contactus@genericcompany.co">contactus@genericcompany.co</a>
+                </p>
+            </div>
+            <div class="col-4">
+                <a href="#">About Us</a><br>
+                <a href="#">Locations</a><br>
+                <a href="#">Other Stuff</a><br>
+                <a href="#">More Stuff</a>
+            </div>
+            <div class="col-4">
+                <a href="#">Careers</a><br>
+                <a href="#">Random Links</a><br>
+                <a href="#">Something Useful</a><br>
+                <a href="#">Not As Useful</a>
+            </div>
+        </div>
+        <div class="row footer-row justify-content-center">
+            Copyright &copy2024 WV Best Technology
+        </div>
+    </div>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

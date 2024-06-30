@@ -1,0 +1,55 @@
+{%  extends "base.html" %}
+{% block title %}{{ super() }} - Unemployment Benefits{% endblock %}
+{% block header %}
+    <style>
+        .content-row {
+            display: flex;
+            align-items: center;
+        }
+        td {
+            padding: 0.5em;
+        }
+        th {
+            text-align: center;
+            padding-top: 1em;
+            padding-bottom: 1em;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="col-12 d-flex justify-content-center margin">
+        <form method="post" action="{{ url_for('login') }}">
+            <table class="table-borderless m-3">
+                <tr class="m-3"><th colspan="2">Login</th></tr>
+                <tr>
+                    <td><label for="email">Email Address:</label></td>
+                    <td><input id="email" name="email" type="email"></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Password:</label></td>
+                    <td><input id="password" name="password" type="password"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <button class="btn border-secondary" type="submit">Login</button>
+                    </td>
+                </tr>
+                <tr class="m-3"><th colspan="2">Or login with third-party authentication</th></tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <button class="btn border-secondary" type="button">
+                            <img src="{{ url_for('static', filename='GoogleSigninButton.png') }}" alt="Sign In with Google Button" width="400">
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <button class="btn border-secondary" type="button">
+                            <img src="{{ url_for('static', filename='AppleSigninButton.png') }}" alt="Sign In with Apple Button" width="400">
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+{% endblock %}
