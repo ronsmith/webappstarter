@@ -15,7 +15,7 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        pass  # TODO: handle login
+        pass
     # else of fall-thru
     return render_template('login.html')
 
