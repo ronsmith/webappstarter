@@ -6,17 +6,17 @@ VALUES
     ('exuser',   'External User',        'A user who is outside the organization',    true);
 
 INSERT INTO users
-    (username, password, firstname, lastname, active)
+    (email, password, firstname, lastname, active)
 VALUES
-    ('jquest', '$2a$10$yT/xEFvieB6dcsW/hF.fxecJPOmG6q44vnfoCRpoH1KAcLGh0fM7e', 'Johnny', 'Quest', true),
-    ('gjetson', '$2a$10$6aJaWFMYghKQtsj7UAEwLujHmwqurh1km39TCQz3iBVC7Dg/B/mN', 'George', 'Jetson', true),
-    ('fflintstone', '$2a$10$dHCjMLUR0Cv2bkCKWHAhv..Z/lh7dDMZbJu6edw3.xtjsBAQHAc2O', 'Fred', 'Flintstone', true);
+    ('jquest@company.com', '$2a$10$yT/xEFvieB6dcsW/hF.fxecJPOmG6q44vnfoCRpoH1KAcLGh0fM7e', 'Johnny', 'Quest', true),
+    ('gjetson@company.com', '$2a$10$6aJaWFMYghKQtsj7UAEwLujHmwqurh1km39TCQz3iBVC7Dg/B/mN', 'George', 'Jetson', true),
+    ('fred@flintstone.me', '$2a$10$dHCjMLUR0Cv2bkCKWHAhv..Z/lh7dDMZbJu6edw3.xtjsBAQHAc2O', 'Fred', 'Flintstone', true);
 
 INSERT INTO users_roles_xref
     (userid, roleid)
 VALUES
-    ((SELECT id FROM users WHERE username='jquest'), (SELECT id from roles WHERE role='sysadmin')),
-    ((SELECT id FROM users WHERE username='jquest'), (SELECT id from roles WHERE role='inuser')),
-    ((SELECT id FROM users WHERE username='gjetson'), (SELECT id from roles WHERE role='inuser')),
-    ((SELECT id FROM users WHERE username='fflintstone'), (SELECT id from roles WHERE role='exuser'));
+    ((SELECT id FROM users WHERE email='jquest@company.com'), (SELECT id from roles WHERE role='sysadmin')),
+    ((SELECT id FROM users WHERE email='jquest@company.com'), (SELECT id from roles WHERE role='inuser')),
+    ((SELECT id FROM users WHERE email='gjetson@company.com'), (SELECT id from roles WHERE role='inuser')),
+    ((SELECT id FROM users WHERE email='fred@flintstone.me'), (SELECT id from roles WHERE role='exuser'));
 
