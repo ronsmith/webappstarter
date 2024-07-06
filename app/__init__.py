@@ -1,10 +1,15 @@
 from flask import Flask, render_template, session, request, redirect, url_for
 from dotenv import load_dotenv
 
+from app.dbsession import DBSessionInterface
+from db import DBPool
+
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = b'c61551d364ddd8d42775eb00796f501092b14d1378e60a6980c31e49ccffe80a'
+app.db_pool = DBPool()
+app.session_interface = DBSessionInterface()
 
 
 @app.route('/')
