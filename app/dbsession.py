@@ -24,6 +24,7 @@ class DBSessionInterface(SessionInterface):
         conn = None
         try:
             conn = app.db_pool.getconn()
+            clean_expired_sessions(conn)  # could be run out of band in a separate process
             with conn.cursor() as cursor:
                 if session_id:
                     cursor.execute("SELECT userid, expires, key_vals FROM sessions WHERE id = %s", (session_id,))
@@ -92,3 +93,6 @@ class DBSessionInterface(SessionInterface):
                 app.db_pool.putconn(conn)
 
 
+def clean_expired_sessions(conn):
+    with conn.cursor() as cursor:
+        cursor.execute("DELETE FROM sessions WHERE expires > now()")
