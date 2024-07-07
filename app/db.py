@@ -22,7 +22,7 @@ class DBPool(object):
             port=port
         )
         if not self.pool:
-            raise ConnectionError()
+            raise DatabaseError("Failed to create database pool")
 
     def getconn(self):
         return self.pool.getconn()
