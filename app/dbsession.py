@@ -1,8 +1,9 @@
 import os
 import logging
 import json
-from .db import DatabaseError
 from flask.sessions import SessionInterface, SessionMixin
+from .db import DatabaseError
+from .user import load_user
 
 _DEFAULT_SESSION_DURATION = '30 MINUTES'
 
@@ -10,12 +11,20 @@ _logger = logging.getLogger(__name__)
 
 
 class Session(dict, SessionMixin):
+    """Class representing the user session."""
 
-    def __init__(self, id, expires, userid=None, key_vals=None):
+    def __init__(self, app, id, expires, userid=None, user=None, key_vals=None):
         super().__init__()
+        if userid is not None and user is not None:
+            if userid != user.id:
+                raise ValueError("userid and user both provided but userid does not match user.id")
+        self.app = app
         self.id = id
         self.expires = expires
-        self.userid = userid
+        self._userid = userid
+        self._user = user
+        if user is not None and userid is None:
+            self._userid = user.id
         if key_vals:
             self.update(key_vals)
 
@@ -23,8 +32,32 @@ class Session(dict, SessionMixin):
         self.clear()
         self.update(new_key_vals)
 
+    @property
+    def user(self):
+        if self._user is None:
+            conn = None
+            try:
+                conn = self.app.db_pool.getconn()
+                self._user = load_user(conn, self._userid)
+            finally:
+                if conn:
+                    self.app.db_pool.putconn(conn)
+        return self._user
+
+    @user.setter
+    def user(self, user):
+        self._user = user
+        if user is not None:
+            self._userid = user.id
+        else:
+            self._userid = None
+
 
 class DBSessionInterface(SessionInterface):
+
+    def __init__(self, app):
+        super().__init__()
+        self.app = app
 
     def open_session(self, app, request) -> Session | None:
         if request.path.startswith('/static') or request.path.startswith('/favicon'):
@@ -49,7 +82,7 @@ class DBSessionInterface(SessionInterface):
                         """, (session_id,))
                         row = cursor.fetchone()
                         if row:
-                            s = Session(session_id, expires=row[0], userid=row[1])
+                            s = Session(self.app, session_id, expires=row[0], userid=row[1])
                             s.replace_key_vals(row[2])
                             _logger.debug(f'opening existing session ID {s.id}')
                         else:
@@ -66,7 +99,7 @@ class DBSessionInterface(SessionInterface):
                         """, (sesdur,))
                         row = cursor.fetchone()
                         if row:
-                            s = Session(id=row[0], expires=row[1])
+                            s = Session(self.app, id=row[0], expires=row[1])
                             _logger.debug(f'opening new session with ID {s.id}')
                         else:
                             raise DatabaseError("No row returned from execute")
@@ -82,7 +115,7 @@ class DBSessionInterface(SessionInterface):
         params = {
             'id': session.id,
             'sesdur': os.environ.get(app.config['SESSION_COOKIE_NAME'], _DEFAULT_SESSION_DURATION),
-            'userid': session.userid,
+            'userid': session._userid,
             'key_vals': json.dumps(session)
         }
         try:
