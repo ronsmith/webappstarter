@@ -33,6 +33,16 @@ class Session(dict, SessionMixin):
         self.update(new_key_vals)
 
     @property
+    def userid(self):
+        return self._userid
+
+    @userid.setter
+    def userid(self, userid):
+        if userid is None or userid != self._userid:
+            self._user = None
+        self._userid = userid
+
+    @property
     def user(self):
         if self._user is None:
             conn = None
@@ -115,7 +125,7 @@ class DBSessionInterface(SessionInterface):
         params = {
             'id': session.id,
             'sesdur': os.environ.get(app.config['SESSION_COOKIE_NAME'], _DEFAULT_SESSION_DURATION),
-            'userid': session._userid,
+            'userid': session.userid,
             'key_vals': json.dumps(session)
         }
         try:
