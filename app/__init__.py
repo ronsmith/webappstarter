@@ -15,7 +15,7 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", logging.WARNING))
 _logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.secret_key = b'c61551d364ddd8d42775eb00796f501092b14d1378e60a6980c31e49ccffe80a'
+app.secret_key = os.environ.get("SECRET_KEY")
 app.db_pool = DBPool()
 app.session_interface = DBSessionInterface(app)
 
@@ -37,12 +37,11 @@ def favicon():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        u = user.login(app.db_pool.getconn(), request.form['email'], request.form['password'])
-        if u:
+        session.user = login_user(app.db_pool.getconn(), request.form['email'], request.form['password'])
+        if session.user:
             resp = make_response(redirect(url_for(request.args.get('next', 'index'))))
-            session.userid = u.id
             set_remember_me(request, resp)
-
+            return resp
         else:
             flash('Invalid email or password', category='error')
 
